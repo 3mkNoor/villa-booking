@@ -11,13 +11,13 @@ export default function Home() {
           priority
           className="absolute object-cover object-bottom w-full h-full"
         />
-        <video
-          src="/public/video-1787523849933.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute object-cover object-bottom w-auto min-w-full min-h-full max-w-none aspect-video"
+       <video
+        src="/video-1787523849933.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute object-cover object-bottom w-auto min-w-full min-h-full max-w-none aspect-video"
         />
         <div className="bg-black/25 absolute inset-0" />
 
