@@ -3,8 +3,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
-      <div className="relative flex justify-center items-end overflow-hidden h-[100svh] lg:h-screen">
-        {/* خلفية الصورة والفيديو */}
+      <div className="relative flex justify-center items-end overflow-hidden h-svh lg:h-screen">
         <Image
           src="/Hero-Landing-Page-JULY2026.webp"
           alt="villa photo"
@@ -12,11 +11,13 @@ export default function Home() {
           priority
           className="absolute object-cover object-bottom w-full h-full"
         />
-        <iframe
-          src="https://player.vimeo.com/video/1206065273?background=1&autoplay=1&loop=1&byline=1&title=1&dnt=1"
+        <video
+          src="/public/video-1787523849933.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute object-cover object-bottom w-auto min-w-full min-h-full max-w-none aspect-video"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
         />
         <div className="bg-black/25 absolute inset-0" />
 
