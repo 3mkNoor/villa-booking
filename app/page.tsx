@@ -2,68 +2,109 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main className="relative min-h-screen w-full overflow-hidden">
+      <div className="relative flex justify-center items-end overflow-hidden h-[100svh] lg:h-screen">
+        {/* خلفية الصورة والفيديو */}
         <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="/Hero-Landing-Page-JULY2026.webp"
+          alt="villa photo"
+          fill
           priority
+          className="absolute object-cover object-bottom w-full h-full"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+        <iframe
+          src="https://player.vimeo.com/video/1206065273?background=1&autoplay=1&loop=1&byline=1&title=1&dnt=1"
+          className="absolute object-cover object-bottom w-auto min-w-full min-h-full max-w-none aspect-video"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+        <div className="bg-black/25 absolute inset-0" />
+
+        <div className="relative flex flex-col w-full h-full justify-end items-center p-8  gap-6 lg:pb-12 text-center text-white" style={{padding:"20px 16px"}}>
+          
+          <div className="flex flex-col max-w-3xl gap-10 mx-auto">
+            <h1 className="font-serif text-balance leading-tight text-center text-white font-extralight tracking-normal text-4xl sm:text-5xl lg:text-6xl">
+              <span className="italic">Where</span><br />
+              <span className="uppercase">villa memories</span><br />
+              <span className="italic">are made</span>
+            </h1>
+          </div>
+
+          <div className="hidden sm:mx-auto sm:block sm:mb-10">
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="/results"
+              className="px-6 py-2 tracking-widest inline-flex items-center justify-center text-center uppercase font-medium border border-white hover:border-white/80 text-white hover:text-white/60 h-12 text-sm transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Browse our villas
+            </a>
+          </div>
+
+          <div className="w-full container sm:hidden">
+            <form action="/results" method="get">
+              <button
+                type="submit"
+                className="tracking-widest inline-flex items-center justify-center text-center uppercase font-medium bg-black text-white hover:bg-black/80 h-16 text-base px-6 py-4 w-full"
+              >
+                Search Villas
+              </button>
+            </form>
+          </div>
+
+          <form className="container hidden mx-auto sm:block border-none" action="/results" method="get">
+            <div className="sm:-space-x-px sm:grid sm:grid-flow-col lg:grid-cols-5 h-16">
+              
+              <div className="hidden sm:flex flex-1 border-l border-border">
+                <button
+                  type="button"
+                  className="flex items-center justify-between w-full h-full px-6 capitalize bg-white text-black border border-gray-300"
+                >
+                  <span>Destinations</span>
+                  <svg className="w-4 h-4 transition-transform duration-300 shrink-0 group-data-[state=open]:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 15 8"><path fillRule="evenodd" clipRule="evenodd" d="M9.78701 2.96828C10.8017 1.97538 12.0223 1.0853 13.4402 0.29374L14.1118 1.49682C12.783 2.23867 11.6648 3.05862 10.7504 3.95333C9.84939 4.83417 9.06179 5.94711 8.39422 7.30414L8.20491 7.68897L6.60116 7.68897L6.41181 7.30431C5.74374 5.94721 4.95636 4.83446 4.05574 3.95357M9.78701 2.96828C8.87048 3.86425 8.07743 4.95013 7.4029 6.21712C6.72806 4.95018 5.9351 3.86435 5.01905 2.9684C4.00185 1.97402 2.76955 1.08331 1.33234 0.291809L0.667649 1.49875C2.01483 2.24068 3.14193 3.06029 4.05574 3.95357"></path></svg>
+
+                </button>
+              </div>
+
+              <div className="hidden md:flex flex-1 border-l border-border">
+                <button
+                  type="button"
+                  className="flex items-center justify-between w-full h-full px-6 capitalize bg-white text-black border border-gray-300"
+                >
+                  <span>Dates</span>
+                  <svg className="w-4 h-4 transition-transform duration-300 shrink-0 group-data-[state=open]:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 15 8"><path fillRule="evenodd" clipRule="evenodd" d="M9.78701 2.96828C10.8017 1.97538 12.0223 1.0853 13.4402 0.29374L14.1118 1.49682C12.783 2.23867 11.6648 3.05862 10.7504 3.95333C9.84939 4.83417 9.06179 5.94711 8.39422 7.30414L8.20491 7.68897L6.60116 7.68897L6.41181 7.30431C5.74374 5.94721 4.95636 4.83446 4.05574 3.95357M9.78701 2.96828C8.87048 3.86425 8.07743 4.95013 7.4029 6.21712C6.72806 4.95018 5.9351 3.86435 5.01905 2.9684C4.00185 1.97402 2.76955 1.08331 1.33234 0.291809L0.667649 1.49875C2.01483 2.24068 3.14193 3.06029 4.05574 3.95357"></path></svg>
+                </button>
+              </div>
+
+              <div className="hidden lg:flex flex-1 border-l border-border">
+                <button
+                  type="button"
+                  className="flex items-center justify-between w-full h-full px-6 capitalize bg-white text-black border border-gray-300"
+                >
+                  <span>Guests</span>
+                  <svg className="w-4 h-4 transition-transform duration-300 shrink-0 group-data-[state=open]:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 15 8"><path fillRule="evenodd" clipRule="evenodd" d="M9.78701 2.96828C10.8017 1.97538 12.0223 1.0853 13.4402 0.29374L14.1118 1.49682C12.783 2.23867 11.6648 3.05862 10.7504 3.95333C9.84939 4.83417 9.06179 5.94711 8.39422 7.30414L8.20491 7.68897L6.60116 7.68897L6.41181 7.30431C5.74374 5.94721 4.95636 4.83446 4.05574 3.95357M9.78701 2.96828C8.87048 3.86425 8.07743 4.95013 7.4029 6.21712C6.72806 4.95018 5.9351 3.86435 5.01905 2.9684C4.00185 1.97402 2.76955 1.08331 1.33234 0.291809L0.667649 1.49875C2.01483 2.24068 3.14193 3.06029 4.05574 3.95357"></path></svg>
+                </button>
+              </div>
+
+              <div className="hidden lg:flex flex-1 border-l border-border">
+                <button
+                  type="button"
+                  className="flex items-center justify-between w-full h-full px-6 capitalize bg-white text-black border border-gray-300"
+                >
+                  <span>Bedrooms</span>
+                  <svg className="w-4 h-4 transition-transform duration-300 shrink-0 group-data-[state=open]:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 15 8"><path fillRule="evenodd" clipRule="evenodd" d="M9.78701 2.96828C10.8017 1.97538 12.0223 1.0853 13.4402 0.29374L14.1118 1.49682C12.783 2.23867 11.6648 3.05862 10.7504 3.95333C9.84939 4.83417 9.06179 5.94711 8.39422 7.30414L8.20491 7.68897L6.60116 7.68897L6.41181 7.30431C5.74374 5.94721 4.95636 4.83446 4.05574 3.95357M9.78701 2.96828C8.87048 3.86425 8.07743 4.95013 7.4029 6.21712C6.72806 4.95018 5.9351 3.86435 5.01905 2.9684C4.00185 1.97402 2.76955 1.08331 1.33234 0.291809L0.667649 1.49875C2.01483 2.24068 3.14193 3.06029 4.05574 3.95357"></path></svg>
+
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                className="border-none! tracking-widest inline-flex items-center justify-center text-center uppercase font-medium bg-black text-white hover:bg-black/80 h-full text-base px-6 py-4 w-full"
+              >
+                Search Villas
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
