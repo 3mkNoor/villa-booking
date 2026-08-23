@@ -17,7 +17,7 @@ export default function Home() {
         loop
         muted
         playsInline
-        className="absolute object-cover object-bottom w-auto min-w-full min-h-full max-w-none aspect-video"
+        className="absolute top-0 left-0 w-full h-full object-cover object-bottom"
         />
         <div className="bg-black/25 absolute inset-0" />
 
