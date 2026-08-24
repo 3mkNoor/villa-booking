@@ -57,6 +57,7 @@ export function Menu() {
               initial={{ y: 0, opacity: 0 }}
               animate={{ y: open ? 0 : "-20px", opacity: open ? 1 : 0 }}
               transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.65 : 0 }}
+              className="pr-6.25"
             >
               <HoverFillLink href="#" fillClassName="py-0.5">Studio bllaat</HoverFillLink>
             </motion.span>
@@ -81,7 +82,7 @@ export function Menu() {
         </div>
 
         {/* 2. العمود الأيمن (13/16) */}
-        <div className="relative w-full md:w-13/16 h-dvh flex flex-col shrink-0 text-[clamp(2.5rem,10vw,6rem)] md:text-[clamp(3rem,8vw,5rem)] leading-[0.9] px-5 uppercase">
+        <div className="relative w-full md:w-13/16 h-dvh flex flex-col shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] px-5 uppercase">
 
           {/* العناوين والروابط العلوية */}
           <div className="w-full cursor-pointer flex-1">
@@ -134,11 +135,11 @@ export function Menu() {
                     hover:after:scale-y-100
                     hover:after:origin-top
 
-                    before:content-[''] before:absolute before:top-0 before:left-0 before:w-px before:h-full before:bg-black before:z-10 before:-my-4!
+                    before:content-[''] before:absolute before:left-0  before:top-2 before:w-px before:h-full before:bg-black before:z-10 
                     before:origin-top before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]
                     group-hover/close:before:bg-white
 
-                    ${open ? "before:scale-y-100" : "before:scale-y-0"}
+                    ${open ? "before:scale-y-80" : "before:scale-y-0"}
                   `}
                   style={{ '--delay': open ? `400ms` : "0ms" } as React.CSSProperties}
                 >
@@ -148,8 +149,8 @@ export function Menu() {
                     xmlns="http://www.w3.org/2000/svg" 
                     className="w-full h-full aspect-square relative z-10 p-3"
                   >
-                    <path d="M1.5 1.5L67 67" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth=".7"></path>
-                    <path d="M66.5 1L0.999997 66.5" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth=".7"></path>
+                    <path d="M1.5 1.5L67 67" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
+                    <path d="M66.5 1L0.999997 66.5" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
                   </svg>
                 </motion.button>
               )}
