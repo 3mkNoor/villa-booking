@@ -37,11 +37,11 @@ export function Menu() {
 
       <motion.nav 
         initial={{ height: 0 }} 
-        animate={{ height: open ? "100vh" : 0 }} 
+        animate={{ height: open ? "100dvh" : 0 }} 
         transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.1 }} 
         onAnimationComplete={() => setInteractive(open)}
         onAnimationStart={() => { if (!open) setInteractive(false); }}
-        className={`fixed top-0 right-0 w-full h-svh max-h-screen bg-white z-50 flex justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed top-0 right-0 w-full max-h-screen bg-white z-50 flex justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
       >
         <div className="w-3/16  h-screen relative shrink-0 pt-5 hidden md:flex flex-col justify-between text-xs font-mono">
           <motion.div 
