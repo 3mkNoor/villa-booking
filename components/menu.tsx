@@ -41,7 +41,7 @@ export function Menu() {
         transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.1 }} 
         onAnimationComplete={() => setInteractive(open)}
         onAnimationStart={() => { if (!open) setInteractive(false); }}
-        className={`fixed top-0 right-0 w-full max-h-screen bg-white z-50 flex justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed top-0 right-0 w-full h-dvh max-h-screen bg-white z-50 flex justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
       >
         <div className="w-3/16  h-screen relative shrink-0 pt-5 hidden md:flex flex-col justify-between text-xs font-mono">
           <motion.div 
@@ -81,7 +81,7 @@ export function Menu() {
         </div>
 
         {/* 2. العمود الأيمن (13/16) */}
-        <div className="relative w-full md:w-13/16  h-screen flex flex-col shrink-0 text-[13vw] md:text-[8vw] leading-[0.85] px-5 uppercase">
+        <div className="relative w-full md:w-13/16 h-full flex flex-col shrink-0 text-[clamp(2.5rem,10vw,6rem)] md:text-[8vw] leading-[0.9] px-5 uppercase">
 
           {/* العناوين والروابط العلوية */}
           <div className="w-full cursor-pointer flex-1">
