@@ -95,7 +95,7 @@ export function Menu() {
                 before:origin-left before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]  
                 ${open ? "before:scale-x-100" : "before:scale-x-0"}
               `}
-              style={{ '--delay': open ? `${300 + index * 60}ms` : "0ms" } as React.CSSProperties}
+              style={{ '--delay': open ? `${300 + -index * 60}ms` : "0ms" } as React.CSSProperties}
             >
               <Title name={title.name} open={open} i={index}  cn="peer" />
 
