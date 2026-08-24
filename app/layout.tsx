@@ -3,9 +3,9 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Menu } from "@/components/menu";
+import { ClientProviders } from "@/components/clientProvider"
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  
   return (
     <html
       lang="en"
@@ -33,8 +34,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet"></link>
     </head>
       <body className="min-h-[200vh] min-w-full">
-        <Menu />
-        {children}
+        <ClientProviders>
+          <Menu />
+          {children}
+        </ClientProviders>
         </body>
     </html>
   );
