@@ -81,7 +81,7 @@ export function Menu() {
         </div>
 
         {/* 2. العمود الأيمن (13/16) */}
-        <div className="relative w-full md:w-13/16 h-full flex flex-col shrink-0 text-[clamp(2.5rem,10vw,6rem)] md:text-[8vw] leading-[0.9] px-5 uppercase">
+        <div className="relative w-full md:w-13/16 h-dvh flex flex-col shrink-0 text-[clamp(2.5rem,10vw,6rem)] md:text-[clamp(3rem,8vw,5rem)] leading-[0.9] px-5 uppercase">
 
           {/* العناوين والروابط العلوية */}
           <div className="w-full cursor-pointer flex-1">
