@@ -43,7 +43,7 @@ export function Menu() {
         onAnimationStart={() => { if (!open) setInteractive(false); }}
         className={`fixed top-0 right-0 w-full h-dvh max-h-screen bg-white z-50 flex flex-col md:flex-row justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
       >
-       <div className="relative w-full h-[10vh] shrink-0 md:h-screen md:w-3/16  p-5 md:pt-5 md:flex flex-col justify-between text-xs font-mono">
+       <div className="relative w-full h-[10vh] shrink-0 md:h-screen md:w-3/16  p-5  md:p-0 md:pt-5! md:flex flex-col justify-between text-xs font-mono">
   
   <motion.button 
     initial={{ top: "-100%" }} 
