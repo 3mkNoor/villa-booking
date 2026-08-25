@@ -252,7 +252,7 @@ export function Menu() {
               </a>
             </address>
 
-            <div className="w-1/2 md:hidden order-3">
+            <div className="w-1/2 md:hidden order-1">
               <p>© Baillat Studio 2026</p>
             </div>
 
@@ -285,7 +285,7 @@ export function Title({ name, open, i, cn }: TitleProps) {
     >
       <div 
       className={`
-        relative py-2.5 flex items-center z-0 w-full
+        relative py-2 md:py-2.5 flex items-center z-0 w-full
 
         after:content-[''] after:absolute 
         after:-top-px after:-bottom-px 
