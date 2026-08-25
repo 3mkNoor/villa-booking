@@ -36,14 +36,14 @@ export function Menu() {
       </button>
 
       <motion.nav 
-        initial={{ height: 0 }} 
-        animate={{ height: open ? "100dvh" : 0 }} 
-        transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.1 }} 
-        onAnimationComplete={() => setInteractive(open)}
-        onAnimationStart={() => { if (!open) setInteractive(false); }}
-        className={`fixed top-0 right-0 w-full h-dvh max-h-screen bg-white z-50 flex flex-col md:flex-row justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
+      initial={{ clipPath: "inset(0 0 100% 0)" }}
+      animate={{ clipPath: open ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)" }}
+      transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.1 }} 
+      onAnimationComplete={() => setInteractive(open)}
+      onAnimationStart={() => { if (!open) setInteractive(false); }}
+      className={`fixed top-0 right-0 w-full h-dvh bg-white z-50 flex flex-col md:flex-row justify-end overflow-hidden ${interactive ? "pointer-events-auto" : "pointer-events-none"}`}
       >
-       <div className="relative w-full h-[10vh] shrink-0 md:h-screen md:w-3/16  p-5  md:p-0 md:pt-5! md:flex flex-col justify-between text-xs font-mono">
+      <div className="relative w-full h-[10vh] md:h-dvh md:w-3/16  p-5 md:pt-5 md:flex flex-col justify-between text-xs font-mono">
   
   <motion.button 
     initial={{ top: "-100%" }} 
@@ -115,7 +115,7 @@ export function Menu() {
         </div>
 
         {/* 2. العمود الأيمن (13/16) */}
-       <div className="relative w-full md:w-13/16 flex-1 flex flex-col md:shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] md:px-5 px-3 uppercase p-2.5 md:pt-0">
+       <div className="relative w-full md:w-13/16 h-dvh flex flex-col md:shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] md:px-5 px-3 uppercase p-2.5 md:pt-0">
 
           {/* العناوين والروابط العلوية */}
           <div className={`w-full cursor flex-1 relative
