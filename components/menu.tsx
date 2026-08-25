@@ -41,12 +41,45 @@ export function Menu() {
         transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.1 }} 
         onAnimationComplete={() => setInteractive(open)}
         onAnimationStart={() => { if (!open) setInteractive(false); }}
-        className={`fixed top-0 right-0 w-full h-dvh max-h-screen bg-white z-50 flex justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed top-0 right-0 w-full h-dvh max-h-screen bg-white z-50 flex flex-col md:flex-row justify-end overflow-hidden ${interactive  ? "pointer-events-auto" : "pointer-events-none"}`}
       >
-        <div className="w-3/16  h-screen relative shrink-0 pt-5 hidden md:flex flex-col justify-between text-xs font-mono">
+       <div className="relative w-full h-[10vh] shrink-0 md:h-screen md:w-3/16  p-5 md:pt-5 md:flex flex-col justify-between text-xs font-mono">
+  
+  <motion.button 
+    initial={{ top: "-100%" }} 
+    animate={{ top: open ? 0 : "-100%" }} 
+    transition={{ duration: 0.4, delay: open ? 0.4 : 0 }} 
+    onClick={() => setOpen(false)} 
+    className={`
+      group/close flex md:hidden absolute w-1/2 right-0 top-0 bottom-0 h-[10vh] text-black items-center justify-center cursor-pointer z-50
+        
+      after:content-[''] after:absolute after:top-0 after:bottom-0 after:left-0 after:-right-5 after:bg-black after:z-0
+      after:transform after:scale-y-0 after:origin-bottom
+      after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.215,0.61,0.355,1)]
+      hover:after:scale-y-100
+      hover:after:origin-top
+
+      before:content-[''] before:absolute before:left-0 before:top-2 before:w-px before:h-full before:bg-black before:z-10 
+      before:origin-top before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]
+      group-hover/close:before:bg-white
+
+      ${open ? "before:scale-y-80" : "before:scale-y-0"}
+    `}
+    style={{ '--delay': open ? `400ms` : "0ms" } as React.CSSProperties}
+  >
+    <svg 
+      viewBox="0 0 68 68" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      className="w-full h-full aspect-square relative z-10 p-3"
+    >
+      <path d="M1.5 1.5L67 67" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
+      <path d="M66.5 1L0.999997 66.5" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
+    </svg>
+  </motion.button>
           <motion.div 
             className={`
-              flex  justify-between w-full h-full relative px-2.5 text-[11px] 
+              hidden md:flex  justify-between w-full h-full relative px-2.5 text-[11px] 
               before:content-[''] before:absolute before:top-0 before:right-0 before:w-px before:h-full before:bg-black
               before:origin-top before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]  
               ${open ? "before:scale-y-100" : "before:scale-y-0"}
@@ -75,17 +108,24 @@ export function Menu() {
             initial={{ opacity: 0 }} 
             animate={{ opacity: open ? 1 : 0 }} 
             transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.75 : 0 }}  
-            className="p-2.5"
+            className="hidden md:block p-2.5"
           >
             © 2026
           </motion.p>
         </div>
 
         {/* 2. العمود الأيمن (13/16) */}
-        <div className="relative w-full md:w-13/16 h-dvh flex flex-col shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] px-5 uppercase">
+       <div className="relative w-full md:w-13/16 flex-1 flex flex-col md:shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] md:px-5 px-3 uppercase p-2.5 md:pt-0">
 
           {/* العناوين والروابط العلوية */}
-          <div className="w-full cursor-pointer flex-1">
+          <div className={`w-full cursor flex-1 relative
+            before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-px before:bg-black
+            before:origin-left before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]  
+            ${open ? "before:scale-x-100" : "before:scale-x-0"}
+            md:before:content-none
+          `}
+          style={{ '--delay': open ? `360ms` : "0ms" } as React.CSSProperties}
+          >
             {titles.map((title, index) => (
               <div 
               key={title.name} 
@@ -127,7 +167,7 @@ export function Menu() {
                   transition={{ duration: 0.4, delay: 0.4 }} 
                   onClick={() => setOpen(false)} 
                   className={`
-                    group/close absolute w-[15%] right-0 top-0 bottom-0 h-full border-none! text-black flex items-center justify-center cursor-pointer
+                    group/close hidden md:flex absolute w-[15%]  right-0 top-0 bottom-0 h-full  text-black items-center justify-center cursor-pointer
                       
                     after:content-[''] after:absolute after:top-0 after:bottom-0 after:left-0 after:-right-5 after:bg-black after:z-0
                     after:transform after:scale-y-0 after:origin-bottom
@@ -232,7 +272,7 @@ export function Title({ name, open, i, cn }: TitleProps) {
   return (
     <Link 
       href={"/"} 
-      className={`group block relative ${i === 0 ? "w-[85%]" : "w-full"} ${cn}`}
+      className={`group block relative ${i === 0 ? "w-full md:w-[85%]" : "w-full"} ${cn}`}
     >
       <div 
       className={`
@@ -240,7 +280,7 @@ export function Title({ name, open, i, cn }: TitleProps) {
 
         after:content-[''] after:absolute 
         after:-top-px after:-bottom-px 
-        after:-left-5.5 ${i === 0 ? "after:-right-0.5" : "after:-right-5"}
+        after:-left-5 ${i === 0 ? "after:-right-5 md:after:-right-0.5" : "after:-right-5"}
         after:bg-black after:-z-10
         after:transform after:scale-y-0 after:origin-bottom
         after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.215,0.61,0.355,1)]
