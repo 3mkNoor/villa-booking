@@ -43,30 +43,40 @@ export function Menu() {
       onAnimationStart={() => { if (!open) setInteractive(false); }}
       className={`fixed top-0 right-0 w-full h-dvh bg-white z-50 flex flex-col md:flex-row justify-end overflow-hidden ${interactive ? "pointer-events-auto" : "pointer-events-none"}`}
       >
-      <div className="relative w-full h-[10vh] md:h-dvh md:w-3/16  p-5 md:pt-5 md:flex flex-col justify-between text-xs font-mono">
-  
-  <motion.button 
-    initial={{ top: "-100%" }} 
-    animate={{ top: open ? 0 : "-100%" }} 
-    transition={{ duration: 0.4, delay: open ? 0.4 : 0 }} 
-    onClick={() => setOpen(false)} 
-    className={`
-      group/close flex md:hidden absolute w-1/2 right-0 top-0 bottom-0 h-[10vh] text-black items-center justify-center cursor-pointer z-50
-        
-      after:content-[''] after:absolute after:top-0 after:bottom-0 after:left-0 after:-right-5 after:bg-black after:z-0
-      after:transform after:scale-y-0 after:origin-bottom
-      after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.215,0.61,0.355,1)]
-      hover:after:scale-y-100
-      hover:after:origin-top
+      {/* left pillar */}
+      <div className="relative w-full h-[10vh] md:h-dvh md:w-3/16  p-3 md:p-0 md:pt-5! md:flex flex-col justify-between text-xs font-mono">
+      {/* <h1 className="md:hidden">Baillat Studio</h1> */}
+      <motion.span
+          initial={{ y: 0, opacity: 0 }}
+          animate={{ y: open ? 0 : "-20px", opacity: open ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.65 : 0 }}
+          className="inline-block md:hidden"
+        >
+          <h1>Baillat Studio</h1>
+      </motion.span>
+      
+      <motion.button 
+      initial={{ top: "-100%" }} 
+      animate={{ top: open ? 0 : "-100%" }} 
+      transition={{ duration: 0.4, delay: open ? 0.4 : 0 }} 
+      onClick={() => setOpen(false)} 
+      className={`
+        group/close flex md:hidden absolute w-1/2 right-0 top-0 bottom-0 h-[10vh] text-black items-center justify-center cursor-pointer z-50
+          
+        after:content-[''] after:absolute after:top-0 after:bottom-0 after:left-0 after:-right-5 after:bg-black after:z-0
+        after:transform after:scale-y-0 after:origin-bottom
+        after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.215,0.61,0.355,1)]
+        hover:after:scale-y-100
+        hover:after:origin-top
 
-      before:content-[''] before:absolute before:left-0 before:top-2 before:w-px before:h-full before:bg-black before:z-10 
-      before:origin-top before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]
-      group-hover/close:before:bg-white
+        before:content-[''] before:absolute before:left-0 before:top-2 before:w-px before:h-full before:bg-black before:z-10 
+        before:origin-top before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]
+        group-hover/close:before:bg-white
 
-      ${open ? "before:scale-y-80" : "before:scale-y-0"}
-    `}
-    style={{ '--delay': open ? `400ms` : "0ms" } as React.CSSProperties}
-  >
+        ${open ? "before:scale-y-80" : "before:scale-y-0"}
+      `}
+      style={{ '--delay': open ? `400ms` : "0ms" } as React.CSSProperties}
+      >
     <svg 
       viewBox="0 0 68 68" 
       fill="none" 
@@ -76,7 +86,7 @@ export function Menu() {
       <path d="M1.5 1.5L67 67" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
       <path d="M66.5 1L0.999997 66.5" className="stroke-black group-hover/close:stroke-white transition-colors duration-200" strokeWidth="1"></path>
     </svg>
-  </motion.button>
+    </motion.button>
           <motion.div 
             className={`
               hidden md:flex  justify-between w-full h-full relative px-2.5 text-[11px] 
@@ -92,7 +102,7 @@ export function Menu() {
               transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.65 : 0 }}
               className="pr-6.25"
             >
-              <HoverFillLink href="#" fillClassName="py-0.5">Studio bllaat</HoverFillLink>
+              <HoverFillLink href="#" fillClassName="py-0.5">Baillat Studio</HoverFillLink>
             </motion.span>
 
             <motion.span
@@ -114,10 +124,9 @@ export function Menu() {
           </motion.p>
         </div>
 
-        {/* 2. العمود الأيمن (13/16) */}
+        {/* right pillar */}
        <div className="relative w-full md:w-13/16 h-dvh flex flex-col md:shrink-0 text-[clamp(2.5rem,13vw,6rem)] md:text-[8vw] leading-[0.9] md:px-5 px-3 uppercase p-2.5 md:pt-0">
 
-          {/* العناوين والروابط العلوية */}
           <div className={`w-full cursor flex-1 relative
             before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-px before:bg-black
             before:origin-left before:transition-transform before:duration-600 before:[transition-delay:var(--delay)]  
@@ -159,7 +168,7 @@ export function Menu() {
                 />
               </span>
 
-              {/* زر الإغلاق Exit Button */}
+              {/* Exit Button */}
               {index === 0 && (
                 <motion.button 
                   initial={{ top: "-150%" }} 
