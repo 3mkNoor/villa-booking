@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* second section */}
 
-      <section className="100vh flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-10">
+      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-10">
         <h1 className="text-center text-5xl text-pretty tracking-wide leading-none">Extraordinary Villas, Lifelong Memories</h1>
         <div className="flex flex-col items-start justify-center max-w-5xl gap-10 align-middle sm:grid sm:grid-cols-3">
 
@@ -158,22 +158,30 @@ export default function Home() {
             Enquire
           </a>
         </div>
-        <div className="flex justify-center gap-3 text-2xl sm:text-4xl tracking-widest ">
-          <h1>Book. Stay. Relax</h1>
-        </div>
       </section>
 
-      <section className="h-screen w-screen">
-        <Section />
-      </section>
+      <h1 className="text-center leading-[0.85] text-[7.5vw] sm:text-[6.5vw] uppercase ">
+        <div>Luxury, Relaxation & </div>
+        <div>Experience</div>
       
-      <section  className="h-screen bg-white"></section>
+      </h1>
+
+        <Section name="/1.jpg" />
+      
+      <section  className="h-screen bg-white">
+        <div className="text-[8vw] text-center uppercase">
+          <h1>top collections</h1>
+        </div>
+        <div>
+          
+        </div>
+      </section>
     </>
   );
 }
 
 
-function Section() {
+function Section({name} : {name?: string}) {
   const container = useRef<HTMLDivElement>(null);
    const { scrollYProgress } = useScroll({
       target: container,
@@ -189,10 +197,14 @@ function Section() {
       className='relative flex items-center justify-center h-screen overflow-hidden'
       style={{clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)"}}
       >
+        <div className='relative z-10 p-20 mix-blend-difference text-white w-full h-full flex flex-col justify-between'>
+            <p className='w-[50vw] text-[5vw] sm:text-[2vw] self-start uppercase mix-blend-difference'>Beauty and quality need the right time to be conceived and realised even in a world that is in too much of a hurry.</p>
+            <p className='text-[5vw] uppercase self-end mix-blend-difference'>Nature at its Finest</p>
+        </div>
         <div className='fixed top-[-10vh] left-0 h-[120vh] w-full'>
           <motion.div style={{ y }} className='relative w-full h-full'>
 
-            <Image src={"/archeticture.jpeg"} fill loading="lazy" alt="image" style={{objectFit: "cover"}}/>
+            <Image src={name || "/archeticture.jpeg"} fill loading="lazy" alt="image" style={{objectFit: "cover"}}/>
 
           </motion.div>
         </div>
