@@ -192,7 +192,7 @@ function Section() {
         <div className='fixed top-[-10vh] left-0 h-[120vh] w-full'>
           <motion.div style={{ y }} className='relative w-full h-full'>
 
-            <Image src={"/archeticture.jpeg"} fill alt="image" style={{objectFit: "cover"}}/>
+            <Image src={"/archeticture.jpeg"} fill loading="lazy" alt="image" style={{objectFit: "cover"}}/>
 
           </motion.div>
         </div>
