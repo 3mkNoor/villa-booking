@@ -14,53 +14,53 @@ export function CustomScrollbar() {
   const [isDragging, setIsDragging] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
-
-  useEffect(() => {
   
+  useEffect(() => {
+    
     const updateHeight = () => {
       setViewportHeight(window.innerHeight);
     };
-
+    
     updateHeight();
     window.addEventListener("resize", updateHeight);
-
+    
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
-
-
+  
+  
   useEffect(() => {
     if (!lenis) return;
-
-
+    
+    
     const handleScroll = ({ progress: p ,velocity}: { progress: number, velocity: number }) => {
-
+      
       progress.set(p);
       setIsScrolling(true);
-
-
+      
+      
       setIsScrolling(Math.abs(velocity) > 0.05);
-
+      
     };
-
+    
     lenis.on("scroll", handleScroll);
     return () => {lenis.off("scroll", handleScroll);
-
-  }
+      
+    }
   }, [lenis, progress, isDragging]);
-
+  
   const thumbHeight = 80;
   const y = useTransform(progress, [0, 1], [0, Math.max(0, viewportHeight - thumbHeight)]);
-
+  
   function updateProgressFromPointer(clientY: number) {
     if (!trackRef.current || !lenis) return;
-
+    
     const trackRect = trackRef.current.getBoundingClientRect();
     const trackHeight = trackRect.height;
     const relativeY = clientY - trackRect.top - thumbHeight / 2;
     const newProgress = Math.min(Math.max(relativeY / (trackHeight - thumbHeight), 0), 1);
-
+    
     progress.set(newProgress);
-
+    
     const scrollTarget = newProgress * lenis.limit;
     lenis.scrollTo(scrollTarget, { 
       immediate: false,
@@ -68,27 +68,28 @@ export function CustomScrollbar() {
       easing: (t) => t
     });
   }
-
+  
   function handlePointerDown(e: React.PointerEvent) {
     setIsDragging(true);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     updateProgressFromPointer(e.clientY);
   }
-
+  
   function handlePointerMove(e: React.PointerEvent) {
     if (!isDragging) return;
     updateProgressFromPointer(e.clientY);
   }
-
+  
   function handlePointerUp() {
     setIsDragging(false);
   }
-
   
+  
+  if (!lenis) return null;
   return (
     <div  ref={trackRef} className=" group fixed right-0 top-0 mr-1 h-dvh w-2.75 z-50 overflow-hidden" 
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+    onMouseEnter={() => setIsHovering(true)}
+    onMouseLeave={() => setIsHovering(false)}
     >
       <motion.div 
         style={{ y, height: thumbHeight }}

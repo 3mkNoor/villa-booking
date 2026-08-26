@@ -8,13 +8,14 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
 
   useEffect(() => {
+    
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
     const lenisInstance = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      syncTouch: true,
-      touchMultiplier: 2,  
-      overscroll: true,
     });
 
     setLenis(lenisInstance);

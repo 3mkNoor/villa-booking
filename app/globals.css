@@ -135,16 +135,6 @@
 
 html {
   font-family: "Syne", sans-serif;
-   scrollbar-width: none;       
-  -ms-overflow-style: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
-}
-
-html, body {
-  overscroll-behavior-y: auto;
 }
 
 button {
@@ -154,4 +144,16 @@ button {
   /* padding: 10px;
   border: 1px solid white; */
 
+}
+
+
+@media (min-width: 769px) {
+  html {
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
 }
