@@ -142,6 +142,11 @@ html {
 html::-webkit-scrollbar {
   display: none;
 }
+
+html, body {
+  overscroll-behavior-y: auto;
+}
+
 button {
   /* border: none; */
   outline: none;
