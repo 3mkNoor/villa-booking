@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* second section */}
 
-      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-10">
+      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py- lg:gap-12 lg:pt-20 lg:pb-60">
         <h1 className="text-center text-5xl text-pretty tracking-wide leading-none">Extraordinary Villas, Lifelong Memories</h1>
         <div className="flex flex-col items-start justify-center max-w-5xl gap-10 align-middle sm:grid sm:grid-cols-3">
 
@@ -163,7 +163,6 @@ export default function Home() {
       <h1 className="text-center leading-[0.85] text-[7.5vw] sm:text-[6.5vw] uppercase ">
         <div>Luxury, Relaxation & </div>
         <div>Experience</div>
-      
       </h1>
 
         <Section name="/1.jpg" />
@@ -174,7 +173,7 @@ export default function Home() {
         </div>
         
         <AutoCarousel 
-        images={["/1.jpg", "/1.jpg", "/1.jpg", "/1.jpg"]}
+        images={["/1.jpg", "/archeticture.jpeg", "/1.jpg", "/archeticture.jpeg"]}
         speed={60}
         gap={"clamp(0.625rem, 0.625rem + 0vw, 0.625rem)"}
         smoothing={6} 
@@ -184,7 +183,7 @@ export default function Home() {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 16" fill="none" vectorEffect="non-scaling-stroke" className="w-1.25 flex-none text-[#818181]">
           <path d="M4.5 1H4C2.34315 1 1 2.34315 1 4V12C1 13.6569 2.34315 15 4 15H4.5" stroke="currentColor"></path>
         </svg>
-          <p className="px-5">View all projects</p>
+          <p className="px-5">View all villas</p>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 16" fill="none" vectorEffect="non-scaling-stroke" className="w-1.25 flex-none text-[#818181]">
           <path d="M0.5 15L1 15C2.65685 15 4 13.6569 4 12L4 4C4 2.34315 2.65686 1 1 1L0.500001 1" stroke="currentColor"></path>
         </svg>
@@ -375,7 +374,7 @@ interface AutoCarouselProps {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp}
-      className={`relative w-full overflow-hidden select-none touch-none my-12 ${
+      className={`relative w-full overflow-hidden select-none  my-12 ${
         isDragging ? "cursor-grabbing" : "cursor-grab"
       }`}
     >

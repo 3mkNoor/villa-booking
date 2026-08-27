@@ -102,7 +102,7 @@ export function Menu() {
               transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.65 : 0 }}
               className="pr-6.25"
             >
-              <HoverFillLink href="#" fillClassName="py-0.5">Baillat Studio</HoverFillLink>
+              <HoverFillLink href="/" fillClassName="py-0.5">Baillat Studio</HoverFillLink>
             </motion.span>
 
             <motion.span
@@ -110,7 +110,7 @@ export function Menu() {
               animate={{ y: open ? 0 : "-20px", opacity: open ? 1 : 0 }}
               transition={{ duration: 0.6, ease: [0.215, 0.61, 0.355, 1], delay: open ? 0.65 : 0 }}
             >
-              <HoverFillLink href="#" fillClassName="py-0.5">English</HoverFillLink>
+              <HoverFillLink href="/" fillClassName="py-0.5">English</HoverFillLink>
             </motion.span>
           </motion.div>
 
@@ -341,10 +341,16 @@ export function HoverFillLink({ href, children, className = "", fillClassName = 
           after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.215,0.61,0.355,1)]
           group-hover:after:scale-y-100
           group-hover:after:origin-top
+
+          group-active:after:scale-y-100
+          group-active:after:origin-top 
+          
+          
           ${fillClassName}
         `}
+        
       >
-        <span className="relative z-10 block transition-colors duration-200 group-hover:text-white">
+        <span className="relative z-10 block transition-colors duration-200 group-hover:text-white group-active:text-white">
           {children}
         </span>
       </span>
