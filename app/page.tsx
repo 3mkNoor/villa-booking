@@ -23,8 +23,9 @@ export default function Home() {
           loop
           muted
           playsInline
+          preload="auto"
           className="absolute top-0 left-0 w-full h-full object-cover object-bottom"
-          />
+        />
           <div className="bg-black/25 absolute inset-0" />
 
           <div className="relative flex flex-col w-full h-full justify-end items-center p-8  gap-6 lg:pb-12 text-center text-white" style={{padding:"20px 16px"}}>
@@ -116,7 +117,7 @@ export default function Home() {
 
       {/* second section */}
 
-      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-60">
+      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-32">
         <h1 className="text-center text-5xl text-pretty tracking-wide leading-none">Extraordinary Villas, Lifelong Memories</h1>
         <div className="flex flex-col items-start justify-center max-w-5xl gap-10 align-middle sm:grid sm:grid-cols-3">
 
@@ -167,7 +168,7 @@ export default function Home() {
 
         <Section name="/1.jpg" />
       
-      <section  className="min-h-screen bg-white my-60">
+      <section  className="min-h-screen bg-white my-32">
         <div className="text-xl  text-center uppercase">
           <h1>( Top Collections )</h1>
         </div>
@@ -273,13 +274,24 @@ interface AutoCarouselProps {
 
   // قياس عرض النسخة الواحدة بدقة
   const measure = useCallback(() => {
-    if (!trackRef.current) return
-    const total = trackRef.current.scrollWidth
-    if (total > 0) {
-      singleSetWidthRef.current = total / 2
-      setReady(true)
-    }
-  }, [])
+  if (!trackRef.current) return;
+  const children = Array.from(trackRef.current.children) as HTMLElement[];
+  if (children.length < images.length) return;
+  const firstLeft = children[0].offsetLeft;
+  const secondSetLeft = children[images.length].offsetLeft;
+  singleSetWidthRef.current = secondSetLeft - firstLeft;
+  setReady(true);
+}, [images.length]);
+
+//  the old way
+// const measure = useCallback(() => {
+//     if (!trackRef.current) return
+//     const total = trackRef.current.scrollWidth
+//     if (total > 0) {
+//       singleSetWidthRef.current = total / 2
+//       setReady(true)
+//     }
+//   }, [])
 
   useEffect(() => {
     measure()
