@@ -1,7 +1,7 @@
 'use client'
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function Home() {
   return (
@@ -172,9 +172,13 @@ export default function Home() {
         <div className="text-[8vw] text-center uppercase">
           <h1>top collections</h1>
         </div>
-        <div>
-          
-        </div>
+        
+        <AutoCarousel 
+        images={["/1.jpg", "/1.jpg", "/1.jpg", "/1.jpg"]}
+        speed={60}
+        gap={"clamp(0.625rem, 0.625rem + 0vw, 0.625rem)"}
+        smoothing={6} 
+       />
       </section>
     </>
   );
@@ -213,4 +217,179 @@ function Section({name} : {name?: string}) {
 
     )
   
+}
+
+interface AutoCarouselProps {
+  images: string[]
+  /** px/second عند عدم السحب */
+  speed?: number
+  /** المسافة بين الصور بالـ px */
+  gap?: string
+  /** معامل تباطؤ الـ momentum بعد الإفلات (0-1)، كل ما قل الرقم كل ما توقف أسرع */
+  smoothing?: number
+}
+ 
+ function AutoCarousel({
+  images,
+  speed = 80,
+  gap = '24',
+  smoothing = 6,
+}: AutoCarouselProps) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const posRef = useRef(0)
+  const singleSetWidthRef = useRef(0)
+
+  const isDraggingRef = useRef(false)
+  const dragLastXRef = useRef(0)
+  const dragLastTimeRef = useRef(0)
+  const dragVelocityRef = useRef(0)
+  const currentVelocityRef = useRef(0)
+
+  const [isDragging, setIsDragging] = useState(false)
+  const [ready, setReady] = useState(false)
+
+  const allImages = [...images, ...images]
+
+  const applyTransform = useCallback((x: number) => {
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(${x}px, 0, 0)`
+    }
+  }, [])
+
+  // قياس عرض النسخة الواحدة بدقة
+  const measure = useCallback(() => {
+    if (!trackRef.current) return
+    const total = trackRef.current.scrollWidth
+    if (total > 0) {
+      singleSetWidthRef.current = total / 2
+      setReady(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    measure()
+
+    // ResizeObserver يضمن دقة أكبر عند تغير أحجام الشاشات المختلفة
+    const observer = new ResizeObserver(() => measure())
+    if (containerRef.current) observer.observe(containerRef.current)
+    if (trackRef.current) observer.observe(trackRef.current)
+
+    return () => observer.disconnect()
+  }, [measure, images])
+
+  // حلقة الحركة الرئيسية (Animation Loop)
+  useEffect(() => {
+    if (!ready) return
+    let raf = 0
+    let last = performance.now()
+
+    function tick(now: number) {
+      const dt = Math.min((now - last) / 1000, 0.05)
+      last = now
+
+      const width = singleSetWidthRef.current
+      if (width <= 0) {
+        raf = requestAnimationFrame(tick)
+        return
+      }
+
+      const target = isDraggingRef.current
+        ? -speed + dragVelocityRef.current
+        : -speed
+
+      const lerpFactor = 1 - Math.exp(-smoothing * dt)
+      currentVelocityRef.current +=
+        (target - currentVelocityRef.current) * lerpFactor
+
+      posRef.current += currentVelocityRef.current * dt
+
+      // معادلة modulo آمنة لمنع التداخل عند السحب السريع
+      posRef.current = ((posRef.current % width) - width) % width
+
+      applyTransform(posRef.current)
+
+      raf = requestAnimationFrame(tick)
+    }
+
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [ready, speed, smoothing, applyTransform])
+
+  function onPointerDown(e: React.PointerEvent) {
+    isDraggingRef.current = true
+    setIsDragging(true)
+    dragLastXRef.current = e.clientX
+    dragLastTimeRef.current = performance.now()
+
+    // ربط الـ Pointer Capture بالـ Container الرئيسي
+    if (containerRef.current) {
+      containerRef.current.setPointerCapture(e.pointerId)
+    }
+  }
+
+  function onPointerMove(e: React.PointerEvent) {
+    if (!isDraggingRef.current) return
+
+    const now = performance.now()
+    const dt = Math.max((now - dragLastTimeRef.current) / 1000, 1 / 240)
+    const instantVelocity = (e.clientX - dragLastXRef.current) / dt
+
+    dragVelocityRef.current += (instantVelocity - dragVelocityRef.current) * 0.5
+
+    dragLastXRef.current = e.clientX
+    dragLastTimeRef.current = now
+  }
+
+  function onPointerUp(e: React.PointerEvent) {
+    if (!isDraggingRef.current) return
+    isDraggingRef.current = false
+    setIsDragging(false)
+    dragVelocityRef.current = 0
+
+    if (containerRef.current && containerRef.current.hasPointerCapture(e.pointerId)) {
+      containerRef.current.releasePointerCapture(e.pointerId)
+    }
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      onPointerLeave={onPointerUp}
+      className={`relative w-full overflow-hidden select-none touch-none ${
+        isDragging ? "cursor-grabbing" : "cursor-grab"
+      }`}
+    >
+      <div
+        ref={trackRef}
+        className="flex will-change-transform"
+        style={{ gap: `${gap}` }}
+      >
+        {allImages.map((src, i) => (
+          <div
+            key={`${src}-${i}`}
+             className="relative aspect-4/5 w-[92vw] min-w-0 shrink-0 overflow-hidden 
+             md:aspect-4/5 md:w-[32vw] md:min-w-87.5 md:max-w-137.5"
+          >
+              <Image
+              src={src}
+              alt="photo"
+              fill
+              sizes="(max-width: 768px) 92vw, 32vw"
+              onLoad={measure}
+              draggable={false}
+              className={`object-cover object-center pointer-events-none transition-transform duration-800 ease-out ${
+                isDragging ? "scale-95" : "scale-100"
+              }`}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
