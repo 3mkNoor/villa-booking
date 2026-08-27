@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* second section */}
 
-      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py- lg:gap-12 lg:pt-20 lg:pb-60">
+      <section className="min-h-screen flex flex-col items-center gap-10 px-5 py-16 lg:gap-12 lg:pt-20 lg:pb-60">
         <h1 className="text-center text-5xl text-pretty tracking-wide leading-none">Extraordinary Villas, Lifelong Memories</h1>
         <div className="flex flex-col items-start justify-center max-w-5xl gap-10 align-middle sm:grid sm:grid-cols-3">
 
@@ -374,7 +374,7 @@ interface AutoCarouselProps {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp}
-      className={`relative w-full overflow-hidden select-none  my-12 ${
+      className={`relative w-full overflow-hidden select-none touch-pan-y my-12 ${
         isDragging ? "cursor-grabbing" : "cursor-grab"
       }`}
     >
