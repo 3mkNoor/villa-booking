@@ -168,9 +168,9 @@ export default function Home() {
 
         <Section name="/1.jpg" />
       
-      <section  className="h-screen bg-white">
-        <div className="text-[8vw] text-center uppercase">
-          <h1>top collections</h1>
+      <section  className="min-h-screen bg-white my-60">
+        <div className="text-xl  text-center uppercase">
+          <h1>( Top Collections )</h1>
         </div>
         
         <AutoCarousel 
@@ -179,6 +179,21 @@ export default function Home() {
         gap={"clamp(0.625rem, 0.625rem + 0vw, 0.625rem)"}
         smoothing={6} 
        />
+
+       <div className="flex  pb-40 justify-center text-xl">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 16" fill="none" vectorEffect="non-scaling-stroke" className="w-1.25 flex-none text-[#818181]">
+          <path d="M4.5 1H4C2.34315 1 1 2.34315 1 4V12C1 13.6569 2.34315 15 4 15H4.5" stroke="currentColor"></path>
+        </svg>
+          <p className="px-5">View all projects</p>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 16" fill="none" vectorEffect="non-scaling-stroke" className="w-1.25 flex-none text-[#818181]">
+          <path d="M0.5 15L1 15C2.65685 15 4 13.6569 4 12L4 4C4 2.34315 2.65686 1 1 1L0.500001 1" stroke="currentColor"></path>
+        </svg>
+       </div>
+
+      </section>
+
+      <section className="text-center p-30 text-7xl">
+        <h1 >soooo comfy</h1>
       </section>
     </>
   );
@@ -212,7 +227,6 @@ function Section({name} : {name?: string}) {
 
           </motion.div>
         </div>
-
       </div>
 
     )
@@ -361,13 +375,13 @@ interface AutoCarouselProps {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp}
-      className={`relative w-full overflow-hidden select-none touch-none ${
+      className={`relative w-full overflow-hidden select-none touch-none my-12 ${
         isDragging ? "cursor-grabbing" : "cursor-grab"
       }`}
     >
       <div
         ref={trackRef}
-        className="flex will-change-transform"
+        className="flex will-change-transform "
         style={{ gap: `${gap}` }}
       >
         {allImages.map((src, i) => (
