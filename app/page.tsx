@@ -1,6 +1,7 @@
 'use client'
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -174,7 +175,7 @@ export default function Home() {
         </div>
         
         <AutoCarousel 
-        images={["/1.jpg", "/archeticture.jpeg", "/1.jpg", "/archeticture.jpeg"]}
+        productsData={Villas}
         speed={60}
         gap={"clamp(0.625rem, 0.625rem + 0vw, 0.625rem)"}
         smoothing={6} 
@@ -233,8 +234,16 @@ function Section({name} : {name?: string}) {
   
 }
 
+interface productData {
+  name: string;
+  price: number;
+  category: string;
+  mainImage: string;
+  secondaryImage: string;
+  href: string;
+}
 interface AutoCarouselProps {
-  images: string[]
+  productsData: productData[];
   /** px/second عند عدم السحب */
   speed?: number
   /** المسافة بين الصور بالـ px */
@@ -242,161 +251,169 @@ interface AutoCarouselProps {
   /** معامل تباطؤ الـ momentum بعد الإفلات (0-1)، كل ما قل الرقم كل ما توقف أسرع */
   smoothing?: number
 }
+
+const Villas = [
+  { name: "large ahh villa", price: 13000000, category: "Miami", mainImage: "/1.jpg", secondaryImage:"/archeticture.jpeg", href: "/properties/villa-1" },
+  { name: "huge ahh villa", price: 40000000, category: "Tokyo", mainImage: "/archeticture.jpeg", secondaryImage:"/1.jpg", href: "/properties/villa-2" },
+  { name: "large ahh villa", price: 13000000, category: "Miami", mainImage: "/1.jpg", secondaryImage:"/archeticture.jpeg", href: "/properties/villa-1" },
+  { name: "huge ahh villa", price: 40000000, category: "Tokyo", mainImage: "/archeticture.jpeg", href: "/properties/villa-2" },
+];
  
  function AutoCarousel({
-  images,
+  productsData,
   speed = 80,
   gap = '24',
   smoothing = 6,
 }: AutoCarouselProps) {
+   const router = useRouter()
   const trackRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-
+ 
   const posRef = useRef(0)
   const singleSetWidthRef = useRef(0)
-
+ 
   const isDraggingRef = useRef(false)
-  const hasMovedRef = useRef(false);
+  const hasMovedRef = useRef(false)
+  const dragStartXRef = useRef(0) // نقطة البداية الحقيقية (تتسجل مرة واحدة بس وقت onPointerDown)
+  const dragStartYRef = useRef(0) // نتابع بيها حركة السكرول العمودي، عشان نفرقها عن السحب الأفقي
   const dragLastXRef = useRef(0)
   const dragLastTimeRef = useRef(0)
   const dragVelocityRef = useRef(0)
-  const dragStartXRef = useRef(0) 
-  const DRAG_THRESHOLD = 8
   const currentVelocityRef = useRef(0)
-
+  const pendingHrefRef = useRef<string | null>(null) // الرابط اللي اتضغط عليه، هنستخدمه لو ثبت إنها tap مش drag
+ 
+  const DRAG_THRESHOLD = 8 // px
+ 
   const [isDragging, setIsDragging] = useState(false)
   const [ready, setReady] = useState(false)
-
-  const allImages = [...images, ...images]
-
+ 
+  const products = [...productsData, ...productsData]
+ 
   const applyTransform = useCallback((x: number) => {
     if (trackRef.current) {
       trackRef.current.style.transform = `translate3d(${x}px, 0, 0)`
     }
   }, [])
-
-  // قياس عرض النسخة الواحدة بدقة
+ 
   const measure = useCallback(() => {
-  if (!trackRef.current) return;
-  const children = Array.from(trackRef.current.children) as HTMLElement[];
-  if (children.length < images.length) return;
-  const firstLeft = children[0].offsetLeft;
-  const secondSetLeft = children[images.length].offsetLeft;
-  singleSetWidthRef.current = secondSetLeft - firstLeft;
-  setReady(true);
-}, [images.length]);
-
-//  the old way
-// const measure = useCallback(() => {
-//     if (!trackRef.current) return
-//     const total = trackRef.current.scrollWidth
-//     if (total > 0) {
-//       singleSetWidthRef.current = total / 2
-//       setReady(true)
-//     }
-//   }, [])
-
+    if (!trackRef.current) return
+    const children = Array.from(trackRef.current.children) as HTMLElement[]
+    if (children.length < productsData.length) return
+    const firstLeft = children[0].offsetLeft
+    const secondSetLeft = children[productsData.length].offsetLeft
+    singleSetWidthRef.current = secondSetLeft - firstLeft
+    setReady(true)
+  }, [productsData.length])
+ 
   useEffect(() => {
     measure()
-
-    // ResizeObserver يضمن دقة أكبر عند تغير أحجام الشاشات المختلفة
     const observer = new ResizeObserver(() => measure())
     if (containerRef.current) observer.observe(containerRef.current)
     if (trackRef.current) observer.observe(trackRef.current)
-
     return () => observer.disconnect()
-  }, [measure, images])
-
-  // حلقة الحركة الرئيسية (Animation Loop)
+  }, [measure, productsData])
+ 
   useEffect(() => {
     if (!ready) return
     let raf = 0
     let last = performance.now()
-
+ 
     function tick(now: number) {
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now
-
+ 
       const width = singleSetWidthRef.current
       if (width <= 0) {
         raf = requestAnimationFrame(tick)
         return
       }
-
+ 
       const target = isDraggingRef.current
         ? -speed + dragVelocityRef.current
         : -speed
-
+ 
       const lerpFactor = 1 - Math.exp(-smoothing * dt)
       currentVelocityRef.current +=
         (target - currentVelocityRef.current) * lerpFactor
-
+ 
       posRef.current += currentVelocityRef.current * dt
-
-      // معادلة modulo آمنة لمنع التداخل عند السحب السريع
       posRef.current = ((posRef.current % width) - width) % width
-
+ 
       applyTransform(posRef.current)
-
       raf = requestAnimationFrame(tick)
     }
-
+ 
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
   }, [ready, speed, smoothing, applyTransform])
-
-  function onPointerDown(e: React.PointerEvent) {
-  isDraggingRef.current = true
-  hasMovedRef.current = false
-  dragStartXRef.current = e.clientX // ← نسجل نقطة البداية هنا بس
-
-  setIsDragging(true)
-  dragLastXRef.current = e.clientX
-  dragLastTimeRef.current = performance.now()
-
-  if (containerRef.current) {
-    containerRef.current.setPointerCapture(e.pointerId)
+ 
+   function onPointerDown(e: React.PointerEvent) {
+    isDraggingRef.current = true
+    hasMovedRef.current = false
+    dragStartXRef.current = e.clientX
+    dragStartYRef.current = e.clientY
+ 
+    // نمسك أقرب رابط للعنصر اللي اتضغط عليه، عشان نقدر ننقل المستخدم لو ثبت إنها tap مش drag
+    const anchor = (e.target as HTMLElement).closest("a")
+    pendingHrefRef.current = anchor?.getAttribute("href") ?? null
+ 
+    setIsDragging(true)
+    dragLastXRef.current = e.clientX
+    dragLastTimeRef.current = performance.now()
+ 
+    if (containerRef.current) {
+      containerRef.current.setPointerCapture(e.pointerId)
+    }
   }
-}
-
-function onPointerMove(e: React.PointerEvent) {
-  if (!isDraggingRef.current) return
-
-  // المسافة الكلية من نقطة البداية الحقيقية، مش من آخر فريم
-  const totalDelta = Math.abs(e.clientX - dragStartXRef.current)
-  if (totalDelta > DRAG_THRESHOLD) {
-    hasMovedRef.current = true
-  }
-
-  const now = performance.now()
-  const dt = Math.max((now - dragLastTimeRef.current) / 1000, 1 / 240)
-  const instantVelocity = (e.clientX - dragLastXRef.current) / dt
-
-  dragVelocityRef.current += (instantVelocity - dragVelocityRef.current) * 0.5
-
-  dragLastXRef.current = e.clientX
-  dragLastTimeRef.current = now
-}
-
-  function onPointerUp(e: React.PointerEvent) {
+ 
+  function onPointerMove(e: React.PointerEvent) {
     if (!isDraggingRef.current) return
+ 
+    // المسافة الكلية من نقطة البداية الحقيقية (مش من آخر فريم)، أفقي ورأسي مع بعض
+    const totalDeltaX = Math.abs(e.clientX - dragStartXRef.current)
+    const totalDeltaY = Math.abs(e.clientY - dragStartYRef.current)
+    if (totalDeltaX > DRAG_THRESHOLD || totalDeltaY > DRAG_THRESHOLD) {
+      hasMovedRef.current = true
+    }
+ 
+    const now = performance.now()
+    const dt = Math.max((now - dragLastTimeRef.current) / 1000, 1 / 240)
+    const instantVelocity = (e.clientX - dragLastXRef.current) / dt
+ 
+    dragVelocityRef.current += (instantVelocity - dragVelocityRef.current) * 0.5
+ 
+    dragLastXRef.current = e.clientX
+    dragLastTimeRef.current = now
+  }
+ 
+  function resetDragState(e: React.PointerEvent) {
     isDraggingRef.current = false
     setIsDragging(false)
     dragVelocityRef.current = 0
-
+ 
     if (containerRef.current && containerRef.current.hasPointerCapture(e.pointerId)) {
       containerRef.current.releasePointerCapture(e.pointerId)
     }
   }
-
-  function handleCardClick(e: React.MouseEvent) {
-  if (hasMovedRef.current) {
-    e.preventDefault();
-    return;
+ 
+  function onPointerUp(e: React.PointerEvent) {
+    if (!isDraggingRef.current) return
+    resetDragState(e)
+ 
+    // لو معملناش سحب/سكرول فعلي، ده معناه tap حقيقي - ننقل يدويًا لأن click الأصلي متلغي بسبب pointer capture
+    if (!hasMovedRef.current && pendingHrefRef.current) {
+      router.push(pendingHrefRef.current)
+    }
+    pendingHrefRef.current = null
   }
-
-  console.log("hi");
-}
+ 
+  function onPointerCancel(e: React.PointerEvent) {
+    // pointercancel بيتفعّل لما المتصفح ياخد السيطرة (زي بداية سكرول عمودي أصلي عبر touch-pan-y)
+    // ده مش "tap" مكتمل بشكل طبيعي، فمينفعش نعمل navigation هنا أبدًا مهما كانت حالة hasMovedRef
+    if (!isDraggingRef.current) return
+    resetDragState(e)
+    pendingHrefRef.current = null
+  }
 
   return (
     <div
@@ -404,8 +421,8 @@ function onPointerMove(e: React.PointerEvent) {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
-      onPointerLeave={onPointerUp}
+      onPointerCancel={onPointerCancel}
+      // onPointerLeave={onPointerUp}
       className={`relative w-full overflow-hidden select-none touch-pan-y my-12 ${
         isDragging ? "cursor-grabbing" : "cursor-grab"
       }`}
@@ -415,8 +432,8 @@ function onPointerMove(e: React.PointerEvent) {
         className="flex will-change-transform "
         style={{ gap: `${gap}` }}
       >
-        {allImages.map((src, i) => (
-          <Card  key={`${src}-${i}`} src={src} isDragging={isDragging}  onCardClick={handleCardClick} />
+        {products.map((product, i) => (
+          <Card  key={`${product.name}-${i}`} mainImage={product.mainImage} secondaryImage={product.secondaryImage} href={product.href} isDragging={isDragging} category={product.category} name={product.name} price={product.price} />
         ))}
       </div>
     </div>
@@ -427,12 +444,16 @@ function onPointerMove(e: React.PointerEvent) {
 
 
 interface CardProps {
-  src: string;
+  mainImage: string;
+  secondaryImage?: string;
+  href: string;
+  category:string;
+  price:number;
+  name:string;
   isDragging: boolean;
-  onCardClick: (e: React.MouseEvent<HTMLAnchorElement>)=>void;
 }
 
-function Card({ src, isDragging, onCardClick }: CardProps) {
+function Card({ mainImage,secondaryImage, isDragging, href, name, price, category }: CardProps) {
   return (
     <div
       className={`
@@ -446,56 +467,68 @@ function Card({ src, isDragging, onCardClick }: CardProps) {
         md:min-w-87.5
         md:max-w-137.5
         flex items-end
-        p-2.5
+        p-2 sm:p-2.5
+        transition-transform duration-300 ease-out
         select-none
         [-webkit-touch-callout:none]
-        transition-transform duration-300 ease-out
         ${isDragging ? "scale-95" : "scale-100"}
       `}
     >
       <Image
-        src={src}
+        src={mainImage}
         alt="photo"
         fill
-        sizes="(max-width: 768px) 92vw, 32vw"
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         draggable={false}
         className="
-          object-cover
-          object-center
-          pointer-events-none
+          object-cover transition-opacity duration-300 ease-out pointer-events-none
+          [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-0
+        "
+      />
+      <Image
+        src={secondaryImage ? secondaryImage : mainImage}
+        alt="photo"
+        fill
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        draggable={false}
+        className="
+          object-cover opacity-0 transition-opacity duration-300 ease-out pointer-events-none 
+          [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100
         "
       />
 
       <a
-         href="#"
+        href={href}
         draggable={false}
+        onClick={(e) => e.preventDefault()}
         className="
-          relative z-10
+         relative z-10
           w-full
+          touch-pan-y
           rounded-xs
           bg-white
-          px-2.5 py-2
+          px-2 py-1.5 sm:px-2.5 sm:py-2
           flex
-          opacity-0
+          opacity-100
           transition-opacity
           duration-300
           ease-out
-          group-hover:opacity-100
+          [@media(hover:hover)_and_(pointer:fine)]:opacity-0
+          [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100
           select-none
           [-webkit-touch-callout:none]
           [-webkit-user-drag:none]
           touch-manipulation
         "
-        onClick={onCardClick}
-       >
-        <div className="flex w-full flex-col justify-between gap-12">
+      >
+        <div className="flex w-full flex-col justify-between gap-6 sm:gap-12">
           <div>
-            <h1>Large ahh villa</h1>
-            <p className="text-(--category)">Miami</p>
+            <h1 className="text-xs sm:text-base">{name}</h1>
+            <p className="text-(--category) text-xs sm:text-sm">{category}</p>
           </div>
 
-          <div className="flex w-full justify-between">
-            <p>E 13,000,000</p>
+          <div className="flex w-full justify-between text-xs sm:text-sm">
+            <p>E£{price}</p>
             <span>↗︎</span>
           </div>
         </div>
