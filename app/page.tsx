@@ -239,7 +239,7 @@ interface productData {
   price: number;
   category: string;
   mainImage: string;
-  secondaryImage: string;
+  secondaryImage?: string;
   href: string;
 }
 interface AutoCarouselProps {
