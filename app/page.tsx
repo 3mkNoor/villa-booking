@@ -256,9 +256,12 @@ interface AutoCarouselProps {
   const singleSetWidthRef = useRef(0)
 
   const isDraggingRef = useRef(false)
+  const hasMovedRef = useRef(false);
   const dragLastXRef = useRef(0)
   const dragLastTimeRef = useRef(0)
   const dragVelocityRef = useRef(0)
+  const dragStartXRef = useRef(0) 
+  const DRAG_THRESHOLD = 8
   const currentVelocityRef = useRef(0)
 
   const [isDragging, setIsDragging] = useState(false)
@@ -343,29 +346,37 @@ interface AutoCarouselProps {
   }, [ready, speed, smoothing, applyTransform])
 
   function onPointerDown(e: React.PointerEvent) {
-    isDraggingRef.current = true
-    setIsDragging(true)
-    dragLastXRef.current = e.clientX
-    dragLastTimeRef.current = performance.now()
+  isDraggingRef.current = true
+  hasMovedRef.current = false
+  dragStartXRef.current = e.clientX // ← نسجل نقطة البداية هنا بس
 
-    // ربط الـ Pointer Capture بالـ Container الرئيسي
-    if (containerRef.current) {
-      containerRef.current.setPointerCapture(e.pointerId)
-    }
+  setIsDragging(true)
+  dragLastXRef.current = e.clientX
+  dragLastTimeRef.current = performance.now()
+
+  if (containerRef.current) {
+    containerRef.current.setPointerCapture(e.pointerId)
+  }
+}
+
+function onPointerMove(e: React.PointerEvent) {
+  if (!isDraggingRef.current) return
+
+  // المسافة الكلية من نقطة البداية الحقيقية، مش من آخر فريم
+  const totalDelta = Math.abs(e.clientX - dragStartXRef.current)
+  if (totalDelta > DRAG_THRESHOLD) {
+    hasMovedRef.current = true
   }
 
-  function onPointerMove(e: React.PointerEvent) {
-    if (!isDraggingRef.current) return
+  const now = performance.now()
+  const dt = Math.max((now - dragLastTimeRef.current) / 1000, 1 / 240)
+  const instantVelocity = (e.clientX - dragLastXRef.current) / dt
 
-    const now = performance.now()
-    const dt = Math.max((now - dragLastTimeRef.current) / 1000, 1 / 240)
-    const instantVelocity = (e.clientX - dragLastXRef.current) / dt
+  dragVelocityRef.current += (instantVelocity - dragVelocityRef.current) * 0.5
 
-    dragVelocityRef.current += (instantVelocity - dragVelocityRef.current) * 0.5
-
-    dragLastXRef.current = e.clientX
-    dragLastTimeRef.current = now
-  }
+  dragLastXRef.current = e.clientX
+  dragLastTimeRef.current = now
+}
 
   function onPointerUp(e: React.PointerEvent) {
     if (!isDraggingRef.current) return
@@ -377,6 +388,15 @@ interface AutoCarouselProps {
       containerRef.current.releasePointerCapture(e.pointerId)
     }
   }
+
+  function handleCardClick(e: React.MouseEvent) {
+  if (hasMovedRef.current) {
+    e.preventDefault();
+    return;
+  }
+
+  console.log("hi");
+}
 
   return (
     <div
@@ -396,25 +416,91 @@ interface AutoCarouselProps {
         style={{ gap: `${gap}` }}
       >
         {allImages.map((src, i) => (
-          <div
-            key={`${src}-${i}`}
-             className="relative aspect-4/5 w-[92vw] min-w-0 shrink-0 overflow-hidden 
-             md:aspect-4/5 md:w-[32vw] md:min-w-87.5 md:max-w-137.5"
-          >
-              <Image
-              src={src}
-              alt="photo"
-              fill
-              sizes="(max-width: 768px) 92vw, 32vw"
-              onLoad={measure}
-              draggable={false}
-              className={`object-cover object-center pointer-events-none transition-transform duration-800 ease-out ${
-                isDragging ? "scale-95" : "scale-100"
-              }`}
-            />
-          </div>
+          <Card  key={`${src}-${i}`} src={src} isDragging={isDragging}  onCardClick={handleCardClick} />
         ))}
       </div>
     </div>
   )
 }
+
+
+
+
+interface CardProps {
+  src: string;
+  isDragging: boolean;
+  onCardClick: (e: React.MouseEvent<HTMLAnchorElement>)=>void;
+}
+
+function Card({ src, isDragging, onCardClick }: CardProps) {
+  return (
+    <div
+      className={`
+        group relative
+        aspect-4/5
+        w-[92vw]
+        min-w-0
+        shrink-0
+        overflow-hidden
+        md:w-[32vw]
+        md:min-w-87.5
+        md:max-w-137.5
+        flex items-end
+        p-2.5
+        select-none
+        [-webkit-touch-callout:none]
+        transition-transform duration-300 ease-out
+        ${isDragging ? "scale-95" : "scale-100"}
+      `}
+    >
+      <Image
+        src={src}
+        alt="photo"
+        fill
+        sizes="(max-width: 768px) 92vw, 32vw"
+        draggable={false}
+        className="
+          object-cover
+          object-center
+          pointer-events-none
+        "
+      />
+
+      <a
+         href="#"
+        draggable={false}
+        className="
+          relative z-10
+          w-full
+          rounded-xs
+          bg-white
+          px-2.5 py-2
+          flex
+          opacity-0
+          transition-opacity
+          duration-300
+          ease-out
+          group-hover:opacity-100
+          select-none
+          [-webkit-touch-callout:none]
+          [-webkit-user-drag:none]
+          touch-manipulation
+        "
+        onClick={onCardClick}
+       >
+        <div className="flex w-full flex-col justify-between gap-12">
+          <div>
+            <h1>Large ahh villa</h1>
+            <p className="text-(--category)">Miami</p>
+          </div>
+
+          <div className="flex w-full justify-between">
+            <p>E 13,000,000</p>
+            <span>↗︎</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  );
+}
+
