@@ -482,7 +482,6 @@ function Card({ mainImage,secondaryImage, isDragging, href, name, price, categor
         draggable={false}
         className="
           object-cover transition-opacity duration-300 ease-out pointer-events-none
-          [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-0
         "
       />
       <Image
