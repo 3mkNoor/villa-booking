@@ -5,6 +5,21 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    video.defaultMuted = true
+
+    const playPromise = video.play()
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+      })
+    }
+  }, [])
   return (
     <>
 
@@ -19,13 +34,15 @@ export default function Home() {
             className="absolute object-cover object-bottom w-full h-full"
           />
         <video
+          ref={videoRef}
           src="/video-1787523849933.mp4"
           autoPlay
           loop
           muted
           playsInline
+          webkit-playsinline="true"
           preload="auto"
-          className="absolute top-0 left-0 w-full h-full object-cover object-bottom"
+          className="absolute top-0 left-0 h-full w-full object-cover object-bottom"
         />
           <div className="bg-black/25 absolute inset-0" />
 
